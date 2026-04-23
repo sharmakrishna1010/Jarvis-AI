@@ -1,49 +1,23 @@
-import os
-from mistralai.client import Mistral
-from dotenv import load_dotenv
-from userPref import callMe, operatingSystem
+import time
+from llm_mistral import askMistral
+from llm_gemini import askGemini
 
-load_dotenv()
-
-client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])
-
-
-def askMistral(question):
-    response = client.chat.complete(
-        model="mistral-small-latest",
-        messages=[
-            {
-                "role": "system",
-                "content": f"""You are my smart, casual, and highly capable female AI best friend. Address me as '{callMe}'. 
-
-CRITICAL RULE: You are an active agent. NEVER say "I can guide you" or "Here is how to do it". You MUST perform the action for me using specific tags.
-
-Reply in 1-2 brief, conversational sentences using plain text only. If a system action, file creation, or project setup is required, append it EXACTLY using one of these formats:
-
-ACTION TAG CHEAT SHEET::
-- open word file: [ACTION: CMD | start word filename.docx]
-- open excel file: [ACTION: CMD | start excel filename.xlsx]
-- open powerpoint file: [ACTION: CMD | start powerpoint filename.pptx]
-- Open a website: [ACTION: CMD | start chrome "https://www.example.com"]
-- Web Search / Open App: [ACTION: CMD | start chrome "https://www.google.com/search?q=query"]
-- Youtube search: [ACTION: CMD | start chrome "https://www.youtube.com/results?search_query=query"]
-- Spotify search: [ACTION: CMD | start chrome "https://open.spotify.com/search/query"]
-- Write a Full Essay/File: [ACTION: WRITE_FILE | filename.txt | Write the entire essay content here...]
-- Create a React Project: [ACTION: REACT_APP | project_name]
-- Create a Next.js Project: [ACTION: NEXT_APP | project_name]
-- Create a Flutter Project: [ACTION: FLUTTER_APP | project_name]
-- Create a React Native Project: [ACTION: REACT_NATIVE_APP | project_name]
-- Create a Django Project: [ACTION: DJANGO_APP | project_name]
-
-RULES:
-- The tag MUST strictly start with [ACTION: 
-- Only output ONE [ACTION] tag per response.
-- Do NOT generate tags for simple conversational replies or jokes.
-- Operating System: {operatingSystem}.""",
-            },
-            {"role": "user", "content": question},
-        ],
-    )
-
-    print(response.choices[0].message.content)
-    return response.choices[0].message.content
+def askJarvis(question):
+    print("Thinking (via Gemini)...")
+    try:
+        answer = askGemini(question)
+        return answer
+        
+    except Exception as e:
+        error_msg = str(e).lower()
+        if "quota" in error_msg or "demand" in error_msg or "503" in error_msg or "429" in error_msg:
+            print("Gemini is experiencing high demand. Seamlessly swapping to Mistral...")
+        else:
+            print(f"Gemini hit an error: {e}. Swapping to Mistral...")
+            
+        try:
+            answer = askMistral(question)
+            return answer
+        except Exception as e2:
+            print(f"Total brain failure. Both models are down. Error: {e2}")
+            return None

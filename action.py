@@ -1,14 +1,15 @@
 import re
 from audio_engine import say
-from llm_brain import askMistral
+from llm_brain import askJarvis
 from registry import TOOL_REGISTRY
 from userPref import userName, callMe
 import datetime
 
+
 def greetings(muted=False):
     currentTime = datetime.datetime.now().strftime("%H:%M")
     hour = int(currentTime[:2])
-    
+
     if hour < 12:
         greeting_text = f"Good morning {userName} {callMe}! How can I help you today?"
     elif hour < 18:
@@ -25,8 +26,8 @@ def greetings(muted=False):
 def performAction(task, muted=False):
     if not task:
         return
-
-    answer = askMistral(task.lower())
+    
+    answer = askJarvis(task.lower())
 
     if answer:
         action_match = re.search(r"\[ACTION:\s*(.*?)\s*\]", answer, re.DOTALL)
@@ -49,7 +50,7 @@ def performAction(task, muted=False):
                 success, message = target_function(*action_args)
 
                 print(message)
-                
+
                 if not success:
                     if not muted:
                         say("I encountered an error trying to do that.")
