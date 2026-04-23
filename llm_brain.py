@@ -10,7 +10,7 @@ client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])
 
 def askMistral(question):
     response = client.chat.complete(
-        model="open-mistral-7b",
+        model="mistral-small-latest",
         messages=[
             {
                 "role": "system",

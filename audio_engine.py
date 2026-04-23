@@ -25,7 +25,7 @@ def listen():
         print("\nListening...")
         recognizer.energy_threshold = 100
         recognizer.pause_threshold = 1
-        recognizer.dynamic_energy_threshold = True
+        # recognizer.dynamic_energy_threshold = True
 
         audio = recognizer.listen(source)
 
