@@ -1,10 +1,9 @@
-import speech_recognition as sr
-import os
+from audio_engine import listen, say
+from action import performAction , greetings
 
-def say(text):
-    os.system('say ' + text)
+if __name__ == "__main__":
 
-if __name__ == '__main__':
-    print('Hello World!')
-    say('Hello World!')
-
+    greetings()
+    while True:
+        task = listen()
+        performAction(task)
