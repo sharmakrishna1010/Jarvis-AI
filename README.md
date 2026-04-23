@@ -17,7 +17,7 @@ Jarvis-AI/
 ├── audio_engine.py      # Manages Google STT input and Kokoro local TTS output
 ├── action.py            # Parses AI intent, enforces security, and executes system commands
 ├── sites.py             # Configuration for hardcoded quick-launch websites
-├── userPref.py          # User personalization (Name, OS, custom wake words)
+├── userPref.py          # User personalization (Username, Call Name, OS Version)
 ├── .env                 # Environment variables (API Keys)
 └── .gitignore           # Git tracking exclusions
 ```
@@ -51,10 +51,20 @@ Install the CUDA-enabled version of PyTorch for GPU acceleration:
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 ```
 
-**4. Environment Variables**
+**4. Configure User Preferences**
+You must create or configure the `userPref.py` file in the root directory so the AI knows who you are and what operating system commands to generate. 
+```python
+# userPref.py
+userName = "Your Name"
+callMe = "Sir" # Or "Boss", "Creator", etc.
+operatingSystem = "Windows 11" # Specify your exact OS
+```
+
+**5. Environment Variables**
 Create a `.env` file in the root directory and add your API credentials:
 ```env
 MISTRAL_API_KEY=your_mistral_api_key_here
+HF_TOKEN=your_huggingface_token_here
 ```
 
 ## 💻 Usage
