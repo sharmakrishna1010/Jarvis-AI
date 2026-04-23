@@ -13,26 +13,6 @@ An advanced, modular, and voice-activated AI desktop assistant built with Python
 * **Built-in Developer Tools:** Natively understands how to bootstrap React, Next.js, Django, and Flutter apps in specified local directories via standard paths (e.g., "Downloads" or "Desktop").
 * **Command Security Firewall:** Includes a strict blocklist to intercept and block destructive terminal operations.
 
-
-
-## 🗂️ Project Structure
-```text
-Jarvis-AI/
-├── main.py              # The core execution loop and Multi-Mode selector
-├── llm_brain.py         # Dual-Brain wrapper handling Gemini & Mistral APIs and system prompts
-├── audio_engine.py      # Manages STT input and Kokoro local TTS output
-├── action.py            # The Dispatcher: parses AI intent and routes to the registry
-├── registry.py          # The Tool Registry mapping action tags to Python functions
-├── tools/               # Isolated skills directory
-│   ├── file_ops.py      # File creation, text writing, and directory management
-│   ├── dev_ops.py       # Scaffolding tools (React, Next.js, Flutter, etc.)
-│   └── system_ops.py    # Safe CMD execution, browser automation, etc.
-├── sites.py             # Configuration for hardcoded quick-launch websites
-├── userPref.py          # User personalization (Username, Call Name, OS Version)
-├── .env                 # Environment variables (API Keys)
-└── .gitignore           # Git tracking exclusions
-```
-
 ## 🛠️ Prerequisites
 * **Python 3.12** (Highly recommended for package compatibility)
 * **NVIDIA GPU** with CUDA support (for fast local TTS)
