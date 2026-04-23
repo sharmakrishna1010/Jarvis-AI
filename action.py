@@ -1,107 +1,51 @@
-import os
-import datetime
-import webbrowser
-import subprocess
+import re
 from audio_engine import say
-from sites import siteList
 from llm_brain import askMistral
-from userPref import userName, callMe
-
-
-def is_safe_command(command):
-    """Scans the command for dangerous Windows/PowerShell operations."""
-
-    dangerous_keywords = {
-        "del",
-        "erase",
-        "rmdir",
-        "rm",
-        "format",
-        "diskpart",
-        "reg",
-        "shutdown",
-        "restart",
-        "remove-item",
-        "clear-content",
-        "drop",
-        "truncate",
-        "attrib",
-        "icacls",
-        "takeown",
-    }
-
-    words = command.lower().split()
-
-    for word in words:
-        if word in dangerous_keywords:
-            return False
-
-    if "|" in command or "&&" in command or ";" in command:
-        return False
-
-    return True
-
+from registry import TOOL_REGISTRY
+from userPref import userName, callMe 
+import datetime
 
 def greetings():
-    now = datetime.datetime.now()
-    if now.hour < 12:
-        say(f"Good Morning {userName} {callMe}, how can I help you?")
-    elif now.hour < 18:
-        say(f"Good Afternoon {userName} {callMe}, how can I help you?")
+    currentTime = datetime.datetime.now().strftime("%H:%M")
+    if int(currentTime[:2]) < 12:
+        say(f"Good morning {userName} {callMe}! How can I help you today?")
+    elif int(currentTime[:2]) < 18:
+        say(f"Good afternoon {userName} {callMe}! How can I help you today?")
     else:
-        say(f"Good Evening {userName} {callMe}, how can I help you?")
-
+        say(f"Good evening {userName} {callMe}! How can I help you today?")
 
 def performAction(task):
-    if task:
-        if "open in browser" in task.lower() and any(
-            site[0] in task.lower() for site in siteList
-        ):
-            for site in siteList:
-                if site[0] in task.lower():
-                    webbrowser.open(site[1])
-                    say("Opening " + site[0] + " for you.")
-                    break
+    if not task:
+        return
 
-        elif "current time" in task.lower():
-            now = datetime.datetime.now()
-            say("The current time is " + now.strftime("%I:%M %p"))
+    answer = askMistral(task.lower())
 
-        elif "today's date" in task.lower():
-            now = datetime.datetime.now()
-            say("Today's date is " + now.strftime("%B %d, %Y"))
+    if answer:
+        # Check if the LLM decided to use a tool
+        action_match = re.search(r'\[ACTION:\s*(.*?)\s*\]', answer, re.DOTALL)
 
-        else:
-            answer = askMistral(task.lower())
+        if action_match:
+            action_string = action_match.group(1)
+            parts = [p.strip() for p in action_string.split('|')]
+            action_type = parts[0]      
+            action_args = parts[1:]    
 
-            if answer:
-                if "COM_TO_RUN:" in answer:
-                    parts = answer.split("COM_TO_RUN:")
-                    spoken_text = parts[0].strip()
-                    command_string = parts[1].strip()
+            # Speak any conversational text
+            spoken_text = answer.replace(action_match.group(0), "").strip()
+            if spoken_text: say(spoken_text)
 
-                    command_to_run = command_string.replace("'", "")
-
-                    if not is_safe_command(command_to_run):
-                        print(
-                            f"SECURITY ALERT: Blocked dangerous command -> {command_to_run}"
-                        )
-                        say(
-                            "I am sorry, but that command violates my core security protocols. I will not execute it."
-                        )
-                        return
-
-                    print(f"Executing System Command: {command_to_run}")
-                    try:
-                        subprocess.Popen(command_to_run, shell=True)
-                    except Exception as e:
-                        print(f"Failed to run command: {e}")
-                        say("I encountered an error trying to execute that command.")
-
-                    if spoken_text:
-                        say(spoken_text)
-
-                else:
-                    say(answer)
+            # THE DISPATCHER 
+            if action_type in TOOL_REGISTRY:
+                target_function = TOOL_REGISTRY[action_type]
+                
+                
+                success, message = target_function(*action_args)
+                
+                print(message)
+                if not success:
+                    say("I encountered an error trying to do that.")
             else:
-                say("Unable to answer your question, please try again.")
+                print(f"Unknown action requested: {action_type}")
+                
+        else:
+            say(answer)
