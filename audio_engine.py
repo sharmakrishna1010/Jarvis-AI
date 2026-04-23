@@ -9,18 +9,16 @@ pipeline = KPipeline(lang_code='a')
 def say(text):
     """Generates audio from text and plays it instantly in memory."""
     generator = pipeline(text, voice='af_heart', speed=1)
+    # generator = pipeline(text, voice='af_nicole', speed=1)
     
     for i, (gs, ps, audio) in enumerate(generator):
-        # audio is a numpy array, play it at Kokoro's native 24000 sample rate
         sd.play(audio, samplerate=24000)
         sd.wait()
 
 def listen():
-    """Your existing microphone listening code."""
     recognizer = sr.Recognizer()
     with sr.Microphone() as source:
         print("\nListening...")
-        # recognizer.adjust_for_ambient_noise(source, duration=0.5)
         recognizer.energy_threshold = 100 
         recognizer.pause_threshold = 0.9
         recognizer.dynamic_energy_threshold = True
