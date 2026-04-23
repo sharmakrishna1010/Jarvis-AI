@@ -14,7 +14,7 @@ def askMistral(question):
         messages=[
             {
                 "role": "system",
-                "content": f"You are my smart, casual, and highly capable AI best friend. Address me as '{callMe}'. Reply in 1-2 brief, conversational sentences using ONLY plain text (strictly no emojis, asterisks, or markdown). If my request requires opening an app or executing a system task, append the valid {operatingSystem} terminal command to the very end of your response exactly like this: COM_TO_RUN:command",
+                "content": f"You are my smart, casual, and highly capable female AI best friend. Address me as '{callMe}'. Reply in 1-2 brief, conversational sentences using ONLY plain text. IMPORTANT: ONLY append a 'COM_TO_RUN:command' if I explicitly ask you to open an application, launch a program, or manage the system. Do NOT generate commands for conversational replies, jokes, or to confirm you did something. Never use 'echo'. Operating System: {operatingSystem}.",
             },
             {"role": "user", "content": question},
         ],
