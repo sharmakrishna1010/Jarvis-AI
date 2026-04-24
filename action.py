@@ -2,8 +2,9 @@ import re
 from audio_engine import say
 from llm_brain import askJarvis
 from registry import TOOL_REGISTRY
-from userPref import userName, callMe
+from userPref import userName, callMe, location, preferredBrowser
 import datetime
+import subprocess
 
 
 def greetings(muted=False):
@@ -26,7 +27,6 @@ def greetings(muted=False):
 def performAction(task, muted=False):
     if not task:
         return
-    
     answer = askJarvis(task.lower())
 
     if answer:
