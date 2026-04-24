@@ -18,6 +18,7 @@ def askMistral(question):
             },
             {"role": "user", "content": question},
         ],
+        temperature=0.1,
     )
 
     print(response.choices[0].message.content)

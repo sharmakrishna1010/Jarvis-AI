@@ -16,7 +16,7 @@ def askGemini(question):
         contents=question,
         config=types.GenerateContentConfig(
             system_instruction=system_prompt,
-            temperature=0.7, # 0.7 makes her sound a bit more casual and human
+            temperature=0.5,
         )
     )
 

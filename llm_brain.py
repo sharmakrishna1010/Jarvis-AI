@@ -1,23 +1,32 @@
 import time
 from llm_mistral import askMistral
 from llm_gemini import askGemini
+from llm_openRouter import askOpenRouter
 
 def askJarvis(question):
-    print("Thinking (via Gemini)...")
     try:
+        print("Thinking (via Gemini)...")
         answer = askGemini(question)
-        return answer
-        
-    except Exception as e:
-        error_msg = str(e).lower()
-        if "quota" in error_msg or "demand" in error_msg or "503" in error_msg or "429" in error_msg:
-            print("Gemini is experiencing high demand. Seamlessly swapping to Mistral...")
-        else:
-            print(f"Gemini hit an error: {e}. Swapping to Mistral...")
-            
-        try:
-            answer = askMistral(question)
+        if answer: 
             return answer
-        except Exception as e2:
-            print(f"Total brain failure. Both models are down. Error: {e2}")
-            return None
+    except Exception as e:
+        print(f"Gemini failed. Falling back to OpenRouter...")
+    
+    try:
+        print("Thinking (via Mistral)...")
+        answer = askMistral(question)
+        if answer:
+            return answer
+    except Exception as e:
+        print(f"Mistral failed. Falling back to OpenRouter...")
+    
+    try:
+        print("Thinking (via OpenRouter)...")
+        answer = askOpenRouter(question)
+        if answer: 
+            return answer
+    except Exception as e:
+        print(f"Total brain failure. All API endpoints are down! Error: {e}")
+        
+        
+    return "I am currently experiencing a critical server failure and cannot process that request."
