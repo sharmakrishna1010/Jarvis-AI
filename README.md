@@ -1,9 +1,9 @@
-# J.A.R.V.I.S. - Intelligent Dual-Mode Desktop Assistant
+# J.A.R.V.I.S. - Intelligent AI Desktop Assistant
 
-An advanced, modular, and voice-activated AI desktop assistant built with Python. J.A.R.V.I.S. operates as an active agent, utilizing a Tool Registry pattern to intelligently route actions, manage files, and bootstrap development projects. It features a Dual-Brain LLM architecture (Google Gemini with a Mistral AI fallback) and local GPU-accelerated Kokoro-82M text-to-speech for zero-latency, human-like voice responses.
+An advanced, modular, and voice-activated AI desktop assistant built with Python. J.A.R.V.I.S. operates as an active agent, utilizing a Tool Registry pattern to intelligently route actions, manage files, and bootstrap development projects. It features a highly resilient Multi-Brain LLM fallback architecture (Google Gemini → Mistral → OpenRouter) and local GPU-accelerated Kokoro-82M text-to-speech for zero-latency, human-like voice responses.
 
 ## ✨ Features
-* **Dual-Brain Fallback System:** Uses `gemini-2.5-flash` as the primary reasoning engine for complex action routing, with automatic seamless fallback to `mistral-small-latest` during rate limits or server outages.
+* **Multi-Brain Fallback System:** Uses `gemini-2.5-flash` as the primary reasoning engine for complex action routing, with an automatic, seamless fallback cascade to `mistral-small-latest` and then OpenRouter's free pool as the final safety net. This ensures zero downtime during rate limits or server outages.
 * **Multi-Mode Interface:** Select how you interact based on your environment:
   * *Voice Mode:* Standard hands-free speech recognition.
   * *Night Mode:* Type your commands, but J.A.R.V.I.S. replies audibly through your headphones.
@@ -33,9 +33,9 @@ python -m venv .venv
 ```
 
 **3. Install dependencies**
-Install the core Python packages, including the new Google GenAI SDK:
+Install the core Python packages, including the required API SDKs:
 ```bash
-pip install mistralai google-genai soundfile sounddevice speechrecognition python-dotenv kokoro
+pip install mistralai google-genai openrouter soundfile sounddevice speechrecognition python-dotenv kokoro
 ```
 Install the CUDA-enabled version of PyTorch for GPU acceleration:
 ```bash
@@ -49,14 +49,15 @@ Configure the `userPref.py` file in the root directory:
 userName = "Your Name"
 callMe = "Sir" 
 operatingSystem = "Windows 11" 
+preferredBrowser = "chrome" # Or "brave", "edge", etc.
 ```
 
 **5. Environment Variables**
-Create a `.env` file in the root directory and add your API credentials:
+Create a `.env` file in the root directory and add your API credentials for the fallback system:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 MISTRAL_API_KEY=your_mistral_api_key_here
-HF_TOKEN=your_huggingface_token_here
+OPENROUTER_API_KEY=your_openrouter_api_key_here
 ```
 
 ## 💻 Usage
