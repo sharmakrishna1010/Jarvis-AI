@@ -1,7 +1,7 @@
 import os
 from mistralai.client import Mistral
 from dotenv import load_dotenv
-from system_instruction import systemInstruction
+from system_instruction import getSystemPrompt
 
 load_dotenv()
 
@@ -14,7 +14,7 @@ def askMistral(question):
         messages=[
             {
                 "role": "system",
-                "content": systemInstruction,
+                "content": getSystemPrompt(),
             },
             {"role": "user", "content": question},
         ],

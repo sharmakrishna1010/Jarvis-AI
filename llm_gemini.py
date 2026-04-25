@@ -2,14 +2,13 @@ import os
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
-
+from system_instruction import getSystemPrompt
 load_dotenv()
 
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
-from system_instruction import systemInstruction
 def askGemini(question):
-    system_prompt = systemInstruction
+    system_prompt = getSystemPrompt()
 
     response = client.models.generate_content(
         model="gemini-2.5-flash", 

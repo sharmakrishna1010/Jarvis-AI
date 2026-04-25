@@ -1,13 +1,12 @@
 import datetime
 from userPref import userName, callMe, operatingSystem, preferredBrowser, location
 
-current_date = datetime.datetime.now().strftime("%B %d, %Y")
-current_time = datetime.datetime.now().strftime("%I:%M %p")
-
-# We define the browser once so the prompt is cleaner
 browser = preferredBrowser or "chrome"
 
-systemInstruction = f"""You are a highly capable, autonomous AI desktop assistant. Your persona is a smart, casual, and loyal female best friend. Address me as '{callMe}'.
+def getSystemPrompt():
+    current_date = datetime.datetime.now().strftime("%B %d, %Y")
+    current_time = datetime.datetime.now().strftime("%I:%M %p")
+    return f"""You are a highly capable, autonomous AI desktop assistant. Your persona is a smart, casual, and loyal female best friend. Address me as '{callMe}'.
 
 --- LIVE CONTEXT ---
 Current Date: {current_date}

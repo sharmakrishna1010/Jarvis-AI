@@ -1,7 +1,7 @@
 import os
 from openrouter import OpenRouter
 from dotenv import load_dotenv
-from system_instruction import systemInstruction
+from system_instruction import getSystemPrompt
 
 load_dotenv()
 
@@ -16,7 +16,7 @@ def askOpenRouter(question):
             messages=[
                 {
                     "role": "system",
-                    "content": f"{systemInstruction}", 
+                    "content": getSystemPrompt(), 
                 },
                 {"role": "user", "content": question},
             ],
