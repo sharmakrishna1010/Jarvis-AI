@@ -1,4 +1,5 @@
 import chromadb
+import datetime
 
 chroma_client = chromadb.PersistentClient(path="./.jarvis_memory")
 
@@ -8,7 +9,8 @@ except:
     memory_collection = chroma_client.create_collection(name="conversation_history")
 
 def save_memory(user_query, ai_response, interaction_id):
-    memory_chunk = f"User said: {user_query} | Jarvis replied: {ai_response}"
+    readable_time = datetime.datetime.fromtimestamp(float(interaction_id)).strftime('%Y-%m-%d %H:%M:%S')
+    memory_chunk = f"[{readable_time}] User said: {user_query} | Jarvis replied: {ai_response}"
     memory_collection.add(
         documents=[memory_chunk],
         metadatas=[{"role": "conversation"}],
