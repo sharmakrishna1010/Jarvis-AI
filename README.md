@@ -1,24 +1,26 @@
 # J.A.R.V.I.S. - Intelligent AI Desktop Assistant
 
-An advanced, modular, and voice-activated AI desktop assistant built with Python. J.A.R.V.I.S. operates as an active agent, utilizing a Tool Registry pattern to intelligently route actions, manage files, and bootstrap development projects. It features a highly resilient Multi-Brain LLM fallback architecture (Google Gemini → Mistral → OpenRouter) and local GPU-accelerated Kokoro-82M text-to-speech for zero-latency, human-like voice responses.
+An advanced, modular, and voice-activated AI desktop assistant built with Python. J.A.R.V.I.S. operates as an active agent, utilizing a Tool Registry pattern to intelligently route actions, manage files, and bootstrap development projects. It features a resilient Multi-Brain LLM fallback architecture (Google Gemini → Mistral → OpenRouter), persistent vector-based memory, and local GPU-accelerated Kokoro-82M text-to-speech for zero-latency, human-like voice responses.
 
-## ✨ Features
-* **Multi-Brain Fallback System:** Uses `gemini-2.5-flash` as the primary reasoning engine for complex action routing, with an automatic, seamless fallback cascade to `mistral-small-latest` and then OpenRouter's free pool as the final safety net. This ensures zero downtime during rate limits or server outages.
+## Features
+* **Multi-Brain Fallback System:** Uses `gemini-2.5-flash` as the primary reasoning engine for complex action routing, with an automatic, seamless fallback cascade to `mistral-small-latest` and OpenRouter's free pool as the final safety net. 
+* **Persistent Long-Term Memory:** Integrates a local ChromaDB vector database to provide semantic search and stateful recall, allowing the agent to remember user preferences and past conversations across system reboots.
+* **Dynamic Context Awareness:** Automatically injects real-time date, time, and location data into the agent's processing pipeline for accurate, context-aware responses without relying on web searches.
 * **Multi-Mode Interface:** Select how you interact based on your environment:
   * *Voice Mode:* Standard hands-free speech recognition.
   * *Night Mode:* Type your commands, but J.A.R.V.I.S. replies audibly through your headphones.
   * *Silent Mode:* Pure text input/output for quiet environments.
-* **Scalable Tool Registry:** Built on an extensible dispatcher pattern. The AI outputs structured `[ACTION]` tags, which Python dynamically routes to isolated tools without relying on raw, fragile shell commands.
-* **Local GPU-Accelerated Voice:** Uses Kokoro-82M running locally on PyTorch/CUDA for incredibly fast and realistic voice synthesis.
-* **Built-in Developer Tools:** Natively understands how to bootstrap React, Next.js, Django, and Flutter apps in specified local directories via standard paths (e.g., "Downloads" or "Desktop").
+* **Scalable Tool Registry:** Built on an extensible dispatcher pattern. The AI outputs structured action tags, which Python dynamically routes to isolated tools without relying on raw, fragile shell commands.
+* **Local GPU-Accelerated Voice:** Uses Kokoro-82M running locally on PyTorch/CUDA (configured with a crisp British dialect) for incredibly fast and realistic voice synthesis.
+* **Built-in Developer Tools:** Natively understands how to bootstrap React, Next.js, Django, and Flutter apps in specified local directories via standard paths.
 * **Command Security Firewall:** Includes a strict blocklist to intercept and block destructive terminal operations.
 
-## 🛠️ Prerequisites
+## Prerequisites
 * **Python 3.12** (Highly recommended for package compatibility)
 * **NVIDIA GPU** with CUDA support (for fast local TTS)
 * **eSpeak-NG**: Required backend for Kokoro TTS. [Download here](https://github.com/espeak-ng/espeak-ng/releases) (Windows `.msi` installer).
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 **1. Clone the repository**
 ```bash
@@ -33,9 +35,9 @@ python -m venv .venv
 ```
 
 **3. Install dependencies**
-Install the core Python packages, including the required API SDKs:
+Install the core Python packages, including the required API SDKs and vector database:
 ```bash
-pip install mistralai google-genai openrouter soundfile sounddevice speechrecognition python-dotenv kokoro
+pip install mistralai google-genai openrouter soundfile sounddevice speechrecognition python-dotenv kokoro chromadb
 ```
 Install the CUDA-enabled version of PyTorch for GPU acceleration:
 ```bash
@@ -49,18 +51,19 @@ Configure the `userPref.py` file in the root directory:
 userName = "Your Name"
 callMe = "Sir" 
 operatingSystem = "Windows 11" 
-preferredBrowser = "chrome" # Or "brave", "edge", etc.
+preferredBrowser = "chrome" 
+location = "Delhi, India"
 ```
 
 **5. Environment Variables**
-Create a `.env` file in the root directory and add your API credentials for the fallback system:
+Create a `.env` file in the root directory and add your API credentials:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 MISTRAL_API_KEY=your_mistral_api_key_here
 OPENROUTER_API_KEY=your_openrouter_api_key_here
 ```
 
-## 💻 Usage
+## Usage
 Ensure your virtual environment is active, then start the system:
 ```powershell
 python main.py
@@ -77,7 +80,7 @@ Select Input Mode:
 
 Enter mode (1/2/3): 
 ```
-Select your mode, wait for the TTS models to load on CUDA, and begin issuing commands!
+Select your mode, wait for the TTS models to load on CUDA, and begin issuing commands.
 
-## 🛡️ Security Note
-Allowing an LLM to interface with your OS inherently carries risk. This project utilizes an `is_safe_command()` filter within `tools/system_ops.py` that blocks dangerous keywords (`del`, `format`, `rmdir`, etc.). **Do not remove this filter** without understanding the consequences of unrestricted `subprocess.Popen` execution.
+## Security Note
+Allowing an LLM to interface with your OS inherently carries risk. This project utilizes an `is_safe_command()` filter within `tools/system_ops.py` that blocks dangerous keywords (`del`, `format`, `rmdir`, etc.). Do not remove this filter without understanding the consequences of unrestricted subprocess execution. Ensure your `jarvis_memory` directory is added to your `.gitignore` to prevent sensitive data from being pushed to public repositories.
