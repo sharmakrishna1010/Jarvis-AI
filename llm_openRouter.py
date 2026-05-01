@@ -16,7 +16,7 @@ def askOpenRouter(question):
             messages=[
                 {
                     "role": "system",
-                    "content": getSystemPrompt(), 
+                    "content": getSystemPrompt(question), 
                 },
                 {"role": "user", "content": question},
             ],

@@ -1,16 +1,27 @@
 import datetime
 from userPref import userName, callMe, operatingSystem, preferredBrowser, location
+from jarvis_memory.jarvis_memory_chroma import recall_relevant_memories
 
 browser = preferredBrowser or "chrome"
 
-def getSystemPrompt():
+def getSystemPrompt(question):
     current_date = datetime.datetime.now().strftime("%B %d, %Y")
     current_time = datetime.datetime.now().strftime("%I:%M %p")
+
+    memories = "None"
+    if question:
+        memories = recall_relevant_memories(question)
+    else:
+        pass
+
     return f"""You are a highly capable, autonomous AI desktop assistant. Your persona is a smart, casual, and loyal female best friend. Address me as '{callMe}'.
 
 --- LIVE CONTEXT ---
 Current Date: {current_date}
 Current Time: {current_time}
+
+--- RELEVANT MEMORIES ---
+{memories}
 
 --- CORE DIRECTIVE ---
 You are an ACTIVE AGENT. You do not "guide" or "explain how to do it"—you execute the task directly. 

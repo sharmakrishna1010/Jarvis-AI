@@ -3,6 +3,7 @@ from audio_engine import say
 from llm_brain import askJarvis
 from registry import TOOL_REGISTRY
 from userPref import userName, callMe, location, preferredBrowser
+from jarvis_memory.jarvis_memory_chroma import save_memory
 import datetime
 import subprocess
 
@@ -27,23 +28,31 @@ def greetings(muted=False):
 def performAction(task, muted=False):
     if not task:
         return
-    answer = askJarvis(task.lower())
-
+        
+    answer = askJarvis(task)
+    
     if answer:
         action_match = re.search(r"\[ACTION:\s*(.*?)\s*\]", answer, re.DOTALL)
+        
+        if action_match:
+            spoken_text = answer.replace(action_match.group(0), "").strip()
+        else:
+            spoken_text = answer.strip()
+            
+        if spoken_text:
+            save_memory(task, spoken_text, str(datetime.datetime.now().timestamp()))
+            
+        if spoken_text:
+            if not muted:
+                say(spoken_text)
+            else:
+                print(spoken_text)
 
         if action_match:
             action_string = action_match.group(1)
             parts = [p.strip() for p in action_string.split("|")]
             action_type = parts[0]
             action_args = parts[1:]
-
-            spoken_text = answer.replace(action_match.group(0), "").strip()
-            if spoken_text:
-                if not muted:
-                    say(spoken_text)
-                else:
-                    print(spoken_text)
 
             if action_type in TOOL_REGISTRY:
                 target_function = TOOL_REGISTRY[action_type]
@@ -52,16 +61,10 @@ def performAction(task, muted=False):
                 print(message)
 
                 if not success:
+                    error_msg = "I encountered an error trying to do that."
                     if not muted:
-                        say("I encountered an error trying to do that.")
+                        say(error_msg)
                     else:
-                        print("I encountered an error trying to do that.")
+                        print(error_msg)
             else:
                 print(f"Unknown action requested: {action_type}")
-
-        else:
-            # Just normal chat
-            if not muted:
-                say(answer)
-            else:
-                print(answer)

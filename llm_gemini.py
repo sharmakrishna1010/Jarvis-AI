@@ -8,7 +8,7 @@ load_dotenv()
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 def askGemini(question):
-    system_prompt = getSystemPrompt()
+    system_prompt = getSystemPrompt(question)
 
     response = client.models.generate_content(
         model="gemini-2.5-flash", 
