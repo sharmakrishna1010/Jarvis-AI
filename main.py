@@ -1,6 +1,6 @@
 import os
-from audio_engine import listen, say
-from action import performAction, greetings
+from core.audio_engine import listen, say
+from core.action import performAction, greetings
 
 def main():
     os.system('cls' if os.name == 'nt' else 'clear')

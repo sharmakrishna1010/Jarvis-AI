@@ -1,9 +1,9 @@
 import re
-from audio_engine import say
-from llm_brain import askJarvis
-from registry import TOOL_REGISTRY
-from userPref import userName, callMe, location, preferredBrowser
-from jarvis_memory.jarvis_memory_chroma import save_memory
+from core.audio_engine import say
+from brains.llm_brain import askJarvis
+from core.registry import TOOL_REGISTRY
+from config.userPref import userName, callMe, location, preferredBrowser
+from memory.memory_chroma import save_memory
 import datetime
 import subprocess
 

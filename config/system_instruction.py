@@ -1,6 +1,6 @@
 import datetime
-from userPref import userName, callMe, operatingSystem, preferredBrowser, location
-from jarvis_memory.jarvis_memory_chroma import recall_relevant_memories
+from config.userPref import userName, callMe, operatingSystem, preferredBrowser, location
+from memory.memory_chroma import recall_relevant_memories
 
 browser = preferredBrowser or "chrome"
 
@@ -14,7 +14,7 @@ def getSystemPrompt(question):
     else:
         pass
 
-    return f"""You are a highly capable, autonomous AI desktop assistant. Your persona is a smart, casual, and loyal female best friend. Address me as '{callMe}'.
+    return f"""You are a highly capable, autonomous AI desktop assistant. Your persona is a smart, casual, and loyal friend. You are JARVIS. Address me as '{callMe}'.
 
 --- LIVE CONTEXT ---
 Current Date: {current_date}

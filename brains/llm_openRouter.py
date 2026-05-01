@@ -1,7 +1,7 @@
 import os
 from openrouter import OpenRouter
 from dotenv import load_dotenv
-from system_instruction import getSystemPrompt
+from config.system_instruction import getSystemPrompt
 
 load_dotenv()
 

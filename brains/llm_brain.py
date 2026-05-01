@@ -1,7 +1,7 @@
 import time
-from llm_mistral import askMistral
-from llm_gemini import askGemini
-from llm_openRouter import askOpenRouter
+from brains.llm_mistral import askMistral
+from brains.llm_gemini import askGemini
+from brains.llm_openRouter import askOpenRouter
 
 
 def askJarvis(question):
