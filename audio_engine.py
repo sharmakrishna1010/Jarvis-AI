@@ -6,13 +6,12 @@ from kokoro import KPipeline
 # Initialize the Kokoro Pipeline
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Loading Voice Models on: {device.upper()}...")
-pipeline = KPipeline(lang_code="a", device=device)
+pipeline = KPipeline(lang_code="b", device=device)
 
 
 def say(text):
-    """Generates audio from text and plays it instantly in memory."""
-    generator = pipeline(text, voice="af_heart", speed=1)
-    # generator = pipeline(text, voice='af_nicole', speed=1)
+    # Generates audio from text and plays it instantly in memory.
+    generator = pipeline(text, voice="bm_daniel", speed=1.15)
 
     for i, (gs, ps, audio) in enumerate(generator):
         sd.play(audio, samplerate=24000)
