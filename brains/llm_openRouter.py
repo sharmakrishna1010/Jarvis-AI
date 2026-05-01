@@ -8,7 +8,7 @@ load_dotenv()
 # OpenRouter SDK setup
 client = OpenRouter(api_key=os.getenv("OPENROUTER_API_KEY"))
 
-def askOpenRouter(question):
+def askOpenRouter(question, chat_context=""):
     print("Thinking (via OpenRouter)...")
     try:
         response = client.chat.send(
@@ -16,7 +16,7 @@ def askOpenRouter(question):
             messages=[
                 {
                     "role": "system",
-                    "content": getSystemPrompt(question), 
+                    "content": getSystemPrompt(question, chat_context), 
                 },
                 {"role": "user", "content": question},
             ],

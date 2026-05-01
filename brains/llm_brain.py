@@ -4,10 +4,10 @@ from brains.llm_gemini import askGemini
 from brains.llm_openRouter import askOpenRouter
 
 
-def askJarvis(question):
+def askJarvis(question, chat_context=""):
     try:
         print("Thinking (via Gemini)...")
-        answer = askGemini(question)
+        answer = askGemini(question, chat_context)
         if answer:
             return answer
     except Exception as e:
@@ -15,7 +15,7 @@ def askJarvis(question):
 
     try:
         print("Thinking (via Mistral)...")
-        answer = askMistral(question)
+        answer = askMistral(question, chat_context)
         if answer:
             return answer
     except Exception as e:
@@ -23,7 +23,7 @@ def askJarvis(question):
 
     try:
         print("Thinking (via OpenRouter)...")
-        answer = askOpenRouter(question)
+        answer = askOpenRouter(question, chat_context)
         if answer:
             return answer
     except Exception as e:

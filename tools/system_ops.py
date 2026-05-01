@@ -1,4 +1,5 @@
 import subprocess
+import psutil
 
 def is_safe_command(command):
     dangerous_keywords = {
@@ -47,3 +48,18 @@ def run_cmd(command_string):
         return True, f"Executing System Command: {command_to_run}"
     except Exception as e:
         return False, f"Failed to run command: {e}"
+
+def report_system_status():
+    try:
+        cpu_usage = psutil.cpu_percent(interval=1)
+        
+        memory = psutil.virtual_memory()
+        ram_usage = memory.percent
+        ram_free_gb = round(memory.available / (1024 ** 3), 1)
+
+        report = f"CPU utilization is at {cpu_usage} percent. Memory is at {ram_usage} percent capacity, with {ram_free_gb} gigabytes available."
+        
+        return True, report
+        
+    except Exception as e:
+        return False, f"Failed to retrieve system status: {e}"

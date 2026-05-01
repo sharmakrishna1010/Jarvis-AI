@@ -7,6 +7,8 @@ from memory.memory_chroma import save_memory
 import datetime
 import subprocess
 
+recent_chat_history = []
+
 
 def greetings(muted=False):
     currentTime = datetime.datetime.now().strftime("%H:%M")
@@ -26,22 +28,27 @@ def greetings(muted=False):
 
 
 def performAction(task, muted=False):
+    global recent_chat_history
     if not task:
         return
-        
-    answer = askJarvis(task)
-    
+
+    chat_context = "\n".join(recent_chat_history)
+    answer = askJarvis(task, chat_context)
+
+    recent_chat_history.append(f"User: {task}")
+
     if answer:
         action_match = re.search(r"\[ACTION:\s*(.*?)\s*\]", answer, re.DOTALL)
-        
+
         if action_match:
             spoken_text = answer.replace(action_match.group(0), "").strip()
         else:
             spoken_text = answer.strip()
-            
+
         if spoken_text:
+            recent_chat_history.append(f"Jarvis: {spoken_text}")
             save_memory(task, spoken_text, str(datetime.datetime.now().timestamp()))
-            
+
         if spoken_text:
             if not muted:
                 say(spoken_text)
@@ -59,6 +66,8 @@ def performAction(task, muted=False):
                 success, message = target_function(*action_args)
 
                 print(message)
+                if success and message and not muted:
+                    say(message)
 
                 if not success:
                     error_msg = "I encountered an error trying to do that."
@@ -68,3 +77,6 @@ def performAction(task, muted=False):
                         print(error_msg)
             else:
                 print(f"Unknown action requested: {action_type}")
+
+    if len(recent_chat_history) > 8:
+        recent_chat_history = recent_chat_history[-6:]

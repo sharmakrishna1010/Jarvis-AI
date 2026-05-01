@@ -8,6 +8,7 @@ from tools.system_ops import *
 TOOL_REGISTRY = {
     # System tools
     "CMD": run_cmd,
+    "SYSTEM_STATUS": report_system_status,
     
     # File tools
     "WRITE_FILE": write_file,

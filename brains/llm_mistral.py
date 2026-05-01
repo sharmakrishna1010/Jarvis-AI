@@ -8,13 +8,13 @@ load_dotenv()
 client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])
 
 
-def askMistral(question):
+def askMistral(question, chat_context=""):
     response = client.chat.complete(
         model="mistral-small-latest",
         messages=[
             {
                 "role": "system",
-                "content": getSystemPrompt(question),
+                "content": getSystemPrompt(question, chat_context),
             },
             {"role": "user", "content": question},
         ],
