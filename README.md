@@ -1,11 +1,14 @@
 # J.A.R.V.I.S. - Intelligent AI Desktop Assistant
 
-An advanced, modular, and voice-activated AI desktop assistant built with Python. J.A.R.V.I.S. operates as an active agent, utilizing a Tool Registry pattern to intelligently route actions, manage files, and bootstrap development projects. It features a resilient Multi-Brain LLM fallback architecture (Google Gemini → Mistral → OpenRouter), persistent vector-based memory, and local GPU-accelerated Kokoro-82M text-to-speech for zero-latency, human-like voice responses.
+An advanced, modular, and voice-activated AI desktop assistant built with Python. J.A.R.V.I.S. operates as an active agent, utilizing a Tool Registry pattern to intelligently route actions, manage files, and bootstrap development projects. It features a resilient Multi-Brain LLM fallback architecture (Google Gemini → Mistral → OpenRouter), a dual-tier memory system, and local GPU-accelerated Kokoro-82M text-to-speech for zero-latency, human-like voice responses.
 
 ## Features
 * **Multi-Brain Fallback System:** Uses `gemini-2.5-flash` as the primary reasoning engine for complex action routing, with an automatic, seamless fallback cascade to `mistral-small-latest` and OpenRouter's free pool as the final safety net. 
-* **Persistent Long-Term Memory:** Integrates a local ChromaDB vector database to provide semantic search and stateful recall, allowing the agent to remember user preferences and past conversations across system reboots.
+* **Dual-Tier Memory Architecture:** 
+  * *Long-Term Persistent Recall:* Integrates a local ChromaDB vector database with chronological timestamping. This provides semantic search and stateful recall, allowing the agent to remember and accurately override user preferences across system reboots.
+  * *Short-Term Working Memory:* Utilizes a sliding-window context buffer to maintain natural, multi-turn conversational flow without losing track of the immediate topic.
 * **Dynamic Context Awareness:** Automatically injects real-time date, time, and location data into the agent's processing pipeline for accurate, context-aware responses without relying on web searches.
+* **Real-Time System Monitoring:** Features native OS-level resource tracking, allowing the AI to instantly analyze and audibly report live CPU utilization and RAM capacity on command.
 * **Multi-Mode Interface:** Select how you interact based on your environment:
   * *Voice Mode:* Standard hands-free speech recognition.
   * *Night Mode:* Type your commands, but J.A.R.V.I.S. replies audibly through your headphones.
@@ -35,9 +38,9 @@ python -m venv .venv
 ```
 
 **3. Install dependencies**
-Install the core Python packages, including the required API SDKs and vector database:
+Install the core Python packages, including the required API SDKs, vector database, and system utilities:
 ```bash
-pip install mistralai google-genai openrouter soundfile sounddevice speechrecognition python-dotenv kokoro chromadb
+pip install mistralai google-genai openrouter soundfile sounddevice speechrecognition python-dotenv kokoro chromadb psutil
 ```
 Install the CUDA-enabled version of PyTorch for GPU acceleration:
 ```bash
@@ -45,9 +48,9 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 ```
 
 **4. Configure User Preferences**
-Configure the `userPref.py` file in the root directory:
+Configure the `userPref.py` file inside the `config/` directory:
 ```python
-# userPref.py
+# config/userPref.py
 userName = "Your Name"
 callMe = "Sir" 
 operatingSystem = "Windows 11" 
@@ -83,4 +86,4 @@ Enter mode (1/2/3):
 Select your mode, wait for the TTS models to load on CUDA, and begin issuing commands.
 
 ## Security Note
-Allowing an LLM to interface with your OS inherently carries risk. This project utilizes an `is_safe_command()` filter within `tools/system_ops.py` that blocks dangerous keywords (`del`, `format`, `rmdir`, etc.). Do not remove this filter without understanding the consequences of unrestricted subprocess execution. Ensure your `jarvis_memory` directory is added to your `.gitignore` to prevent sensitive data from being pushed to public repositories.
+Allowing an LLM to interface with your OS inherently carries risk. This project utilizes an `is_safe_command()` filter within the tools directory that blocks dangerous keywords (`del`, `format`, `rmdir`, etc.). Do not remove this filter without understanding the consequences of unrestricted subprocess execution. Ensure your `jarvis_memory` directory is added to your `.gitignore` to prevent sensitive data from being pushed to public repositories.
