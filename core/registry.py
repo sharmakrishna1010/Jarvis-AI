@@ -1,6 +1,7 @@
 from tools.file_ops import *
 from tools.dev_ops import *
 from tools.system_ops import *
+from tools.web_ops import *
 
 # import tools as you build them...
 
@@ -19,4 +20,7 @@ TOOL_REGISTRY = {
     "FLUTTER_APP": create_flutter_app,
     "REACT_NATIVE_APP": create_react_native_app,
     "DJANGO_APP": create_django_app,
+    
+    # Web tools
+    "GET_WEATHER": fetch_live_weather,
 }

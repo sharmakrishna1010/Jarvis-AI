@@ -2,7 +2,7 @@ import re
 from core.audio_engine import say
 from brains.llm_brain import askJarvis
 from core.registry import TOOL_REGISTRY
-from config.userPref import userName, callMe, location, preferredBrowser
+from config.userPref import callMe
 from memory.memory_chroma import save_memory
 import datetime
 import subprocess
@@ -15,11 +15,11 @@ def greetings(muted=False):
     hour = int(currentTime[:2])
 
     if hour < 12:
-        greeting_text = f"Good morning {userName} {callMe}! How can I help you today?"
+        greeting_text = f"Good morning {callMe}! How can I help you today?"
     elif hour < 18:
-        greeting_text = f"Good afternoon {userName} {callMe}! How can I help you today?"
+        greeting_text = f"Good afternoon {callMe}! How can I help you today?"
     else:
-        greeting_text = f"Good evening {userName} {callMe}! How can I help you today?"
+        greeting_text = f"Good evening {callMe}! How can I help you today?"
 
     if not muted:
         say(greeting_text)
@@ -37,6 +37,7 @@ def performAction(task, muted=False):
 
     recent_chat_history.append(f"User: {task}")
 
+    SPEAK_RESULT_ACTIONS = {"GET_WEATHER", "SYSTEM_STATUS", "REACT_APP", "NEXT_APP", "FLUTTER_APP", "REACT_NATIVE_APP", "DJANGO_APP", "WRITE_FILE"}
     if answer:
         action_match = re.search(r"\[ACTION:\s*(.*?)\s*\]", answer, re.DOTALL)
 
@@ -67,7 +68,8 @@ def performAction(task, muted=False):
 
                 print(message)
                 if success and message and not muted:
-                    say(message)
+                    if action_type in SPEAK_RESULT_ACTIONS:
+                        say(message)
 
                 if not success:
                     error_msg = "I encountered an error trying to do that."
