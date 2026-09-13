@@ -20,7 +20,8 @@ def askOpenRouter(question, chat_context=""):
                 },
                 {"role": "user", "content": question},
             ],
-            temperature=0.1,   
+            temperature=0.1,
+            max_tokens=500,
         )
 
         answer = response.choices[0].message.content

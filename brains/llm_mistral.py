@@ -19,6 +19,7 @@ def askMistral(question, chat_context=""):
             {"role": "user", "content": question},
         ],
         temperature=0.1,
+        max_tokens=500,
     )
 
     print(response.choices[0].message.content)
