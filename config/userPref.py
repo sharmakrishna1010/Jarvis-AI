@@ -1,5 +1,0 @@
-userName = "Krishna"
-callMe = "Sir"
-operatingSystem = "Windows 11"
-preferredBrowser = "brave"
-location = "Faridabad"

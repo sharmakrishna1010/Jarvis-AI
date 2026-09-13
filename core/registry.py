@@ -2,6 +2,7 @@ from tools.file_ops import *
 from tools.dev_ops import *
 from tools.system_ops import *
 from tools.web_ops import *
+from tools.preference import *
 
 # import tools as you build them...
 
@@ -23,4 +24,8 @@ TOOL_REGISTRY = {
     
     # Web tools
     "GET_WEATHER": fetch_live_weather,
+
+    # Preference tools
+    "SAVE_PREFERENCE": save_preference,
+    "DELETE_PREFERENCE": delete_preference,
 }

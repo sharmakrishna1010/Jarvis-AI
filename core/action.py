@@ -2,8 +2,7 @@ import re
 from core.audio_engine import say
 from brains.llm_brain import askJarvis
 from core.registry import TOOL_REGISTRY
-from config.userPref import callMe
-from memory.memory_chroma import save_memory
+from memory.memory_chroma import save_memory, preference_collection
 import datetime
 import subprocess
 
@@ -14,12 +13,29 @@ def greetings(muted=False):
     currentTime = datetime.datetime.now().strftime("%H:%M")
     hour = int(currentTime[:2])
 
+    call_name = "Sir"
+    try:
+        prefs = preference_collection.get()
+        if prefs and prefs.get("metadatas"):
+            meta_dict = {
+                m.get("key", "").strip().lower(): m.get("value", "").strip()
+                for m in prefs["metadatas"]
+                if m.get("key") and m.get("value")
+            }
+            # Check in priority order: direct title/call preference first, then user's name
+            for candidate in ["callme", "call_me", "nickname", "name", "username", "user_name"]:
+                if candidate in meta_dict and meta_dict[candidate]:
+                    call_name = meta_dict[candidate]
+                    break
+    except Exception:
+        pass
+
     if hour < 12:
-        greeting_text = f"Good morning {callMe}! How can I help you today?"
+        greeting_text = f"Good morning {call_name}! How can I help you today?"
     elif hour < 18:
-        greeting_text = f"Good afternoon {callMe}! How can I help you today?"
+        greeting_text = f"Good afternoon {call_name}! How can I help you today?"
     else:
-        greeting_text = f"Good evening {callMe}! How can I help you today?"
+        greeting_text = f"Good evening {call_name}! How can I help you today?"
 
     if not muted:
         say(greeting_text)
@@ -36,8 +52,9 @@ def performAction(task, muted=False):
     answer = askJarvis(task, chat_context)
 
     recent_chat_history.append(f"User: {task}")
+    
+    SPEAK_RESULT_ACTIONS = set(TOOL_REGISTRY.keys())
 
-    SPEAK_RESULT_ACTIONS = {"GET_WEATHER", "SYSTEM_STATUS", "REACT_APP", "NEXT_APP", "FLUTTER_APP", "REACT_NATIVE_APP", "DJANGO_APP", "WRITE_FILE"}
     if answer:
         action_match = re.search(r"\[ACTION:\s*(.*?)\s*\]", answer, re.DOTALL)
 
