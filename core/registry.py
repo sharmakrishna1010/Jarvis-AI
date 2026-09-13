@@ -3,6 +3,7 @@ from tools.dev_ops import *
 from tools.system_ops import *
 from tools.web_ops import *
 from tools.preference import *
+from tools.media_control import *
 
 # import tools as you build them...
 
@@ -28,4 +29,11 @@ TOOL_REGISTRY = {
     # Preference tools
     "SAVE_PREFERENCE": save_preference,
     "DELETE_PREFERENCE": delete_preference,
+
+    # Media control tools
+    "PAUSE_RESUME": pause_resume,
+    "VOLUME_DOWN": volume_down,
+    "VOLUME_UP": volume_up,
+    "PLAY_NEXT": play_next,
+    "PLAY_PREVIOUS": play_previous
 }
