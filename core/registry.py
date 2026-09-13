@@ -4,8 +4,7 @@ from tools.system_ops import *
 from tools.web_ops import *
 from tools.preference import *
 from tools.media_control import *
-
-# import tools as you build them...
+from tools.news import *
 
 # The magic dictionary
 TOOL_REGISTRY = {
@@ -35,5 +34,11 @@ TOOL_REGISTRY = {
     "VOLUME_DOWN": volume_down,
     "VOLUME_UP": volume_up,
     "PLAY_NEXT": play_next,
-    "PLAY_PREVIOUS": play_previous
+    "PLAY_PREVIOUS": play_previous,
+
+    # News tools
+    "GET_GEO_NEWS": get_geo_news,
+    "GET_TOPIC_NEWS": get_topic_news,
+    "GET_SEARCH_NEWS": get_search_news,
+    "GET_TOP_HEADLINES": get_top_headlines,
 }
